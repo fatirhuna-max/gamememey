@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBS Overlay - Jagad Imud Aurora</title>
+    <title>OBS Overlay - Jagad Imut Shimmer Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Aurora Colors */
-            --bg: #000000;
-            --clr-1: #00c2ff;
-            --clr-2: #33ff8c;
-            --clr-3: #ffc640;
-            --clr-4: #e54cff;
-            --blur: 1.5rem;
-            --fs: clamp(3rem, 6vw, 7rem);
-            --ls: clamp(-1.75px, -0.25vw, -3.5px);
-            
-            /* Seiko Colors */
+            /* Warna Seiko */
             --accent-pink: #ff005e;
+            
+            /* Variabel Efek Neon (Ukuran diperbesar) */
+            --font-size: clamp(6rem, 12vw, 14rem); 
+            --spotlight-color: rgba(255, 255, 255, 0.8);
+            --color-1: #00d4ff; /* Cyan */
+            --color-2: #ff005e; /* Pink */
         }
 
         body {
@@ -35,23 +31,23 @@
             display: flex;
             align-items: center;
             height: 100vh;
-            padding: 0 60px;
-            gap: 50px;
+            padding: 0 40px;
+            gap: 40px;
         }
 
-        /* --- SEIKO CLOCK STYLING --- */
+        /* --- GAYA JAM SEIKO --- */
         .clock-section {
-            width: 32vmin;
-            height: 32vmin;
-            background: rgba(255, 255, 255, 0.05);
+            width: 35vmin;
+            height: 35vmin;
+            background: rgba(255, 255, 255, 0.03);
             border: 1.2vmin solid #000;
             border-radius: 50%;
             position: relative;
-            z-index: 10;
+            z-index: 100;
             box-shadow: 
-                inset 10px 10px 30px rgba(0,0,0,.5), 
-                15px 15px 25px rgba(0,0,0,.4);
-            backdrop-filter: blur(8px);
+                inset 10px 10px 30px rgba(0,0,0,.6), 
+                20px 20px 40px rgba(0,0,0,.5);
+            backdrop-filter: blur(10px);
             flex-shrink: 0;
         }
 
@@ -61,32 +57,30 @@
             top: 2.5%; left: 2.5%;
             width: 95%; height: 95%;
             border-radius: 50%;
-            border: 0.8vmin solid rgba(255, 255, 255, 0.15);
+            border: 0.8vmin solid rgba(255, 255, 255, 0.1);
         }
 
         .label {
             position: absolute;
-            top: 25%;
-            left: 50%;
+            top: 25%; left: 50%;
             transform: translateX(-50%);
-            font-size: 1.8vmin;
+            font-size: 1.6vmin;
             font-weight: 700;
             color: white;
-            letter-spacing: 2px;
-            opacity: 0.6;
+            letter-spacing: 3px;
+            opacity: 0.5;
         }
 
         .hourhand, .secondhand, .minutehand {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            z-index: 12;
+            top: 50%; left: 50%;
+            z-index: 120;
             transform-origin: 0% 50%;
         }
 
-        .hourhand { width: 9vmin; height: 1.1vmin; background: #fff; margin-top: -0.55vmin; border-radius: 0 10px 10px 0; }
-        .minutehand { width: 13vmin; height: 0.7vmin; background: #eee; margin-top: -0.35vmin; border-radius: 0 10px 10px 0; }
-        .secondhand { width: 14.5vmin; height: 0.25vmin; background: var(--accent-pink); margin-top: -0.125vmin; box-shadow: 0 0 5px var(--accent-pink); }
+        .hourhand { width: 10vmin; height: 1.2vmin; background: #fff; margin-top: -0.6vmin; border-radius: 0 10px 10px 0; }
+        .minutehand { width: 13vmin; height: 0.8vmin; background: #ddd; margin-top: -0.4vmin; border-radius: 0 10px 10px 0; }
+        .secondhand { width: 15.5vmin; height: 0.25vmin; background: var(--accent-pink); margin-top: -0.125vmin; box-shadow: 0 0 10px var(--accent-pink); }
 
         .hourhand:after, .secondhand:after, .minutehand:after {
             content: '';
@@ -96,18 +90,17 @@
             position: absolute;
             top: 50%; left: 0;
             transform: translate(-50%, -50%);
-            z-index: 15;
+            z-index: 150;
         }
 
         .hour12, .hour1, .hour2, .hour3, .hour4, .hour5 {
-            height: 0.4vmin;
-            width: 100%;
+            height: 0.5vmin; width: 100%;
             background: transparent;
-            border-left: 2.5vmin solid rgba(255,255,255,0.7);
-            border-right: 2.5vmin solid rgba(255,255,255,0.7);
+            border-left: 2.5vmin solid rgba(255,255,255,0.6);
+            border-right: 2.5vmin solid rgba(255,255,255,0.6);
             position: absolute;
             top: 50%; left: 0;
-            margin-top: -0.2vmin;
+            margin-top: -0.25vmin;
         }
 
         .hour12 { transform: rotate(0deg); }
@@ -117,97 +110,106 @@
         .hour4  { transform: rotate(120deg); }
         .hour5  { transform: rotate(150deg); }
 
-        /* --- AURORA TEXT STYLING --- */
-        .content {
-            text-align: left;
-            position: relative;
+        /* --- EFEK TEKS NEON SHIMMER --- */
+        .text-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: visible;
         }
 
-        .title {
-            font-size: var(--fs);
-            font-weight: 800;
-            letter-spacing: var(--ls);
-            position: relative;
+        .text-effect-wrapper {
             overflow: hidden;
-            background: var(--bg); /* Penting untuk mix-blend-mode */
-            margin: 0;
-            padding: 10px 20px;
-            border-radius: 15px;
-            display: inline-block;
+            position: relative;
+            background: transparent;
+            padding: 20px 40px; 
+            margin-left: -40px; 
+            display: flex;
+            align-items: center;
         }
 
-        .subtitle {
-            font-size: 2.2rem;
-            margin-top: 10px;
-            margin-left: 20px;
-            font-weight: 400;
-            opacity: 0.9;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .aurora {
+        .text-effect-wrapper::before,
+        .text::after {
+            content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            mix-blend-mode: darken;
+            inset: 0;
             pointer-events: none;
         }
 
-        .aurora__item {
-            overflow: hidden;
-            position: absolute;
-            width: 30vw;
-            height: 30vw;
-            background-color: var(--clr-1);
-            border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%;
-            filter: blur(var(--blur));
+        /* Animasi Kilauan (Shimmer) */
+        .text-effect-wrapper::before {
+            animation: shimmer 5s infinite linear;
+            background: 
+                radial-gradient(circle, var(--spotlight-color), transparent 25%) 0 0 / 25% 25%,
+                radial-gradient(circle, var(--spotlight-color), transparent 25%) 50% 50% / 12.5% 12.5%;
+            top: -100%;
+            left: -100%;
             mix-blend-mode: overlay;
+            z-index: 3;
         }
 
-        .aurora__item:nth-of-type(1) {
-            top: -50%;
-            animation: aurora-border 6s ease-in-out infinite, aurora-1 12s ease-in-out infinite alternate;
+        .text {
+            color: white;
+            font-family: "Lato", sans-serif;
+            font-size: var(--font-size);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+            position: relative;
+            white-space: nowrap;
+            text-shadow: 
+                0 0 15px var(--color-1),
+                0 0 30px var(--color-1),
+                0 0 60px var(--color-2);
+            z-index: 2;
+            line-height: 1.2;
         }
 
-        .aurora__item:nth-of-type(2) {
-            background-color: var(--clr-3);
-            right: 0; top: 0;
-            animation: aurora-border 6s ease-in-out infinite, aurora-2 12s ease-in-out infinite alternate;
+        .text::after {
+            background: linear-gradient(45deg, var(--color-1), var(--color-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            mix-blend-mode: normal;
+            z-index: 5;
+            content: "Jagad Imut";
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: inherit;
         }
 
-        .aurora__item:nth-of-type(3) {
-            background-color: var(--clr-2);
-            left: 0; bottom: 0;
-            animation: aurora-border 6s ease-in-out infinite, aurora-3 8s ease-in-out infinite alternate;
+        /* SUBTITLE: Perbesar & Animasi Berkedip */
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            /* Ukuran diperbesar secara signifikan */
+            font-size: clamp(3rem, 4.5vw, 5.5rem); 
+            margin-top: -10px;
+            padding-left: 5px;
+            color: #fff;
+            opacity: 1;
+            text-align: left;
+            z-index: 5;
+            position: relative;
+            text-shadow: 2px 2px 12px rgba(0,0,0,0.9);
+            /* Animasi berkedip */
+            animation: blinker 1.5s linear infinite;
         }
 
-        .aurora__item:nth-of-type(4) {
-            background-color: var(--clr-4);
-            right: 0; bottom: -50%;
-            animation: aurora-border 6s ease-in-out infinite, aurora-4 24s ease-in-out infinite alternate;
+        @keyframes shimmer {
+            100% { transform: translate3d(50%, 50%, 0); }
         }
 
-        /* Animations */
-        @keyframes aurora-1 { 0% { top: 0; right: 0; } 50% { top: 100%; right: 75%; } 75% { top: 100%; right: 25%; } 100% { top: 0; right: 0; } }
-        @keyframes aurora-2 { 0% { top: -50%; left: 0%; } 60% { top: 100%; left: 75%; } 85% { top: 100%; left: 25%; } 100% { top: -50%; left: 0%; } }
-        @keyframes aurora-3 { 0% { bottom: 0; left: 0; } 40% { bottom: 100%; left: 75%; } 65% { bottom: 40%; left: 50%; } 100% { bottom: 0; left: 0; } }
-        @keyframes aurora-4 { 0% { bottom: -50%; right: 0; } 50% { bottom: 0%; right: 40%; } 90% { bottom: 50%; right: 25%; } 100% { bottom: -50%; right: 0; } }
-        @keyframes aurora-border {
-            0%, 100% { border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%; }
-            25% { border-radius: 47% 29% 39% 49% / 61% 19% 66% 26%; }
-            50% { border-radius: 57% 23% 47% 72% / 63% 17% 66% 33%; }
-            75% { border-radius: 28% 49% 29% 100% / 93% 20% 64% 25%; }
+        /* Keyframes Animasi Berkedip */
+        @keyframes blinker {
+            50% { opacity: 0.2; }
         }
+
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
-        <!-- Jam Seiko Style -->
+        <!-- Jam Analog Seiko Style -->
         <section class="clock-section">
             <div class="label">SEIKO</div>
             <div class="hourhand" id="hour-hand"></div>
@@ -221,16 +223,11 @@
             <div class="hour5"></div>
         </section>
 
-        <!-- Teks Aurora Content -->
-        <div class="content">
-            <h1 class="title">Jagad Imud
-                <div class="aurora">
-                    <div class="aurora__item"></div>
-                    <div class="aurora__item"></div>
-                    <div class="aurora__item"></div>
-                    <div class="aurora__item"></div>
-                </div>
-            </h1>
+        <!-- Teks Shimmer Neon Effect -->
+        <div class="text-group">
+            <div class="text-effect-wrapper">
+                <h1 class="text">Jagad Imut</h1>
+            </div>
             <p class="subtitle">Bakul Mbako Hobi Audio.</p>
         </div>
     </div>
