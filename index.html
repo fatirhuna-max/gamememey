@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBS Overlay - Jagad Imut Shimmer Edition</title>
+    <title>OBS Overlay - Jagad Imut Bookmark Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&family=Inter:wght@400;700&family=Rubik+Mono+One&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
-            /* Warna Seiko */
-            --accent-pink: #ff005e;
+            /* Warna Emas Metalik */
+            --gold-1: #BF953F;
+            --gold-2: #FCF6BA;
+            --gold-3: #B38728;
+            --gold-4: #FBF5B7;
+            --gold-5: #AA771C;
             
-            /* Variabel Efek Neon (Ukuran diperbesar) */
-            --font-size: clamp(6rem, 12vw, 14rem); 
-            --spotlight-color: rgba(255, 255, 255, 0.8);
-            --color-1: #00d4ff; /* Cyan */
-            --color-2: #ff005e; /* Pink */
+            --accent-pink: #ff005e;
+            --font-size-main: clamp(6rem, 12vw, 14rem); 
+            --spotlight-color: rgba(255, 255, 255, 0.4);
         }
 
         body {
@@ -44,9 +47,7 @@
             border-radius: 50%;
             position: relative;
             z-index: 100;
-            box-shadow: 
-                inset 10px 10px 30px rgba(0,0,0,.6), 
-                20px 20px 40px rgba(0,0,0,.5);
+            box-shadow: inset 10px 10px 30px rgba(0,0,0,.6), 20px 20px 40px rgba(0,0,0,.5);
             backdrop-filter: blur(10px);
             flex-shrink: 0;
         }
@@ -110,106 +111,102 @@
         .hour4  { transform: rotate(120deg); }
         .hour5  { transform: rotate(150deg); }
 
-        /* --- EFEK TEKS NEON SHIMMER --- */
+        /* --- TEKS UTAMA EMAS --- */
         .text-group {
             display: flex;
             flex-direction: column;
             justify-content: center;
             overflow: visible;
+            flex-grow: 1;
+            position: relative;
         }
 
         .text-effect-wrapper {
-            overflow: hidden;
+            overflow: visible;
             position: relative;
-            background: transparent;
-            padding: 20px 40px; 
+            padding: 10px 40px; 
             margin-left: -40px; 
             display: flex;
             align-items: center;
-        }
-
-        .text-effect-wrapper::before,
-        .text::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-
-        /* Animasi Kilauan (Shimmer) */
-        .text-effect-wrapper::before {
-            animation: shimmer 5s infinite linear;
-            background: 
-                radial-gradient(circle, var(--spotlight-color), transparent 25%) 0 0 / 25% 25%,
-                radial-gradient(circle, var(--spotlight-color), transparent 25%) 50% 50% / 12.5% 12.5%;
-            top: -100%;
-            left: -100%;
-            mix-blend-mode: overlay;
-            z-index: 3;
+            z-index: 10;
         }
 
         .text {
-            color: white;
+            color: transparent;
             font-family: "Lato", sans-serif;
-            font-size: var(--font-size);
+            font-size: var(--font-size-main);
             font-weight: 900;
             text-transform: uppercase;
             margin: 0;
             position: relative;
             white-space: nowrap;
-            text-shadow: 
-                0 0 15px var(--color-1),
-                0 0 30px var(--color-1),
-                0 0 60px var(--color-2);
+            text-shadow: 0 0 10px rgba(179, 135, 40, 0.4);
             z-index: 2;
-            line-height: 1.2;
-        }
-
-        .text::after {
-            background: linear-gradient(45deg, var(--color-1), var(--color-2));
+            line-height: 1.1;
+            background: linear-gradient(to right, var(--gold-1), var(--gold-2), var(--gold-3), var(--gold-4), var(--gold-5));
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            mix-blend-mode: normal;
-            z-index: 5;
-            content: "Jagad Imut";
+            animation: shineGold 4s linear infinite;
+        }
+
+        @keyframes shineGold { to { background-position: 200% center; } }
+
+        /* --- ANIMASI BOOKMARK (PENANDA BUKU) --- */
+        .bookmark-container {
+            margin-top: 5px;
+            perspective: 1000px;
+            overflow: visible;
+            width: fit-content;
+        }
+
+        .bookmark-label {
+            display: flex;
+            align-items: center;
+            background: var(--gold-3);
+            background: linear-gradient(135deg, var(--gold-5) 0%, var(--gold-3) 50%, var(--gold-1) 100%);
+            padding: 12px 40px 12px 25px;
+            color: #000;
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            border-left: 8px solid #fff;
+            transform-origin: left center;
+            opacity: 0;
+            transform: translateX(-50px) rotateY(-30deg);
+        }
+
+        .bookmark-text {
+            color: #1a1a1a;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.3);
+        }
+
+        /* Cahaya pada reben */
+        .bookmark-label::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            padding: inherit;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg);
+            animation: lightSweep 4s infinite 2s;
         }
 
-        /* SUBTITLE: Perbesar & Animasi Berkedip */
-        .subtitle {
-            font-family: 'Inter', sans-serif;
-            /* Ukuran diperbesar secara signifikan */
-            font-size: clamp(3rem, 4.5vw, 5.5rem); 
-            margin-top: -10px;
-            padding-left: 5px;
-            color: #fff;
-            opacity: 1;
-            text-align: left;
-            z-index: 5;
-            position: relative;
-            text-shadow: 2px 2px 12px rgba(0,0,0,0.9);
-            /* Animasi berkedip */
-            animation: blinker 1.5s linear infinite;
+        @keyframes lightSweep {
+            0% { left: -100%; }
+            20% { left: 150%; }
+            100% { left: 150%; }
         }
-
-        @keyframes shimmer {
-            100% { transform: translate3d(50%, 50%, 0); }
-        }
-
-        /* Keyframes Animasi Berkedip */
-        @keyframes blinker {
-            50% { opacity: 0.2; }
-        }
-
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
-        <!-- Jam Analog Seiko Style -->
+        <!-- Jam Analog Seiko -->
         <section class="clock-section">
             <div class="label">SEIKO</div>
             <div class="hourhand" id="hour-hand"></div>
@@ -223,33 +220,62 @@
             <div class="hour5"></div>
         </section>
 
-        <!-- Teks Shimmer Neon Effect -->
+        <!-- Grup Teks -->
         <div class="text-group">
             <div class="text-effect-wrapper">
                 <h1 class="text">Jagad Imut</h1>
             </div>
-            <p class="subtitle">Bakul Mbako Hobi Audio.</p>
+            
+            <!-- Penanda Buku (Bookmark) Subtitle -->
+            <div class="bookmark-container">
+                <div class="bookmark-label" id="bookmark">
+                    <span class="bookmark-text">Bakul Mbako Hobi Audio.</span>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Kemas kini Jam Seiko
         function updateClock() {
             const now = new Date();
             const seconds = now.getSeconds();
             const minutes = now.getMinutes();
             const hours = now.getHours();
-
             const secDeg = ((seconds / 60) * 360) - 90;
             const minDeg = ((minutes / 60) * 360) + ((seconds / 60) * 6) - 90;
             const hourDeg = ((hours % 12) / 12 * 360) + ((minutes / 60) * 30) - 90;
-
             document.getElementById('sec-hand').style.transform = `rotate(${secDeg}deg)`;
             document.getElementById('min-hand').style.transform = `rotate(${minDeg}deg)`;
             document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
         }
-
         setInterval(updateClock, 1000);
         updateClock();
+
+        // Animasi Bookmark menggunakan GSAP
+        window.onload = () => {
+            const tl = gsap.timeline({ repeat: -1, repeatDelay: 5 });
+
+            // Masuk: Slaid dan pusing (Efek Bookmark)
+            tl.to("#bookmark", {
+                duration: 1.2,
+                opacity: 1,
+                x: 0,
+                rotateY: 0,
+                ease: "back.out(1.7)"
+            });
+
+            // Berhenti sebentar (Paparan)
+            tl.to("#bookmark", { duration: 4 });
+
+            // Keluar: Slaid ke kiri
+            tl.to("#bookmark", {
+                duration: 0.8,
+                opacity: 0,
+                x: -100,
+                ease: "power2.in"
+            });
+        };
     </script>
 </body>
 </html>
