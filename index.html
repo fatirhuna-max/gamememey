@@ -3,20 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBS Overlay - Jagad Imut Flat Gold</title>
+    <title>OBS Overlay - Jam & Logo Image</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
-            /* Palet Emas Mewah */
-            --gold-bright: #fff3a1;
-            --gold-light: #f9d423;
             --gold-mid: #d4af37;
-            --gold-dark: #a67c00;
-            
             --accent-pink: #ff005e;
-            --font-size-main: clamp(6rem, 12vw, 14rem); 
         }
 
         body {
@@ -25,21 +19,20 @@
             background-color: transparent !important;
             overflow: hidden;
             font-family: "Inter", sans-serif;
-            color: #fff;
         }
 
         .main-wrapper {
             display: flex;
             align-items: center;
             height: 100vh;
-            padding: 0 50px;
-            gap: 50px;
+            padding: 0 30px; /* Padding dikurangi untuk memberi ruang lebih */
+            gap: 20px; /* Jarak dikurangi agar logo bergeser ke kiri mendekati jam */
         }
 
         /* --- GAYA JAM SEIKO --- */
         .clock-section {
-            width: 38vmin;
-            height: 38vmin;
+            width: 32vmin; /* Sedikit dikecilkan agar seimbang dengan logo raksasa */
+            height: 32vmin;
             background: rgba(20, 20, 20, 0.85);
             border: 1.3vmin solid #111;
             outline: 0.5vmin solid var(--gold-mid);
@@ -68,9 +61,9 @@
             position: absolute;
             top: 25%; left: 50%;
             transform: translateX(-50%);
-            font-size: 1.8vmin;
+            font-size: 1.6vmin;
             font-weight: 700;
-            color: var(--gold-light);
+            color: var(--gold-mid);
             font-family: 'Oswald', sans-serif;
             letter-spacing: 4px;
             opacity: 0.7;
@@ -83,14 +76,14 @@
             transform-origin: 0% 50%;
         }
 
-        .hourhand { width: 11vmin; height: 1.3vmin; background: #fff; margin-top: -0.65vmin; border-radius: 0 10px 10px 0; }
-        .minutehand { width: 15vmin; height: 0.9vmin; background: #ddd; margin-top: -0.45vmin; border-radius: 0 10px 10px 0; }
-        .secondhand { width: 17vmin; height: 0.3vmin; background: var(--accent-pink); margin-top: -0.15vmin; box-shadow: 0 0 12px var(--accent-pink); }
+        .hourhand { width: 9vmin; height: 1.3vmin; background: #fff; margin-top: -0.65vmin; border-radius: 0 10px 10px 0; }
+        .minutehand { width: 13vmin; height: 0.9vmin; background: #ddd; margin-top: -0.45vmin; border-radius: 0 10px 10px 0; }
+        .secondhand { width: 14vmin; height: 0.3vmin; background: var(--accent-pink); margin-top: -0.15vmin; box-shadow: 0 0 12px var(--accent-pink); }
 
         .hourhand:after, .secondhand:after, .minutehand:after {
             content: '';
             background: #fff;
-            width: 2.2vmin; height: 2.2vmin;
+            width: 2vmin; height: 2vmin;
             border-radius: 50%;
             position: absolute;
             top: 50%; left: 0;
@@ -101,8 +94,8 @@
         .hour12, .hour1, .hour2, .hour3, .hour4, .hour5 {
             height: 0.6vmin; width: 100%;
             background: transparent;
-            border-left: 3.5vmin solid var(--gold-mid);
-            border-right: 3.5vmin solid var(--gold-mid);
+            border-left: 3vmin solid var(--gold-mid);
+            border-right: 3vmin solid var(--gold-mid);
             position: absolute;
             top: 50%; left: 0;
             margin-top: -0.3vmin;
@@ -116,76 +109,24 @@
         .hour4  { transform: rotate(120deg); }
         .hour5  { transform: rotate(150deg); }
 
-        /* --- EFEK TEKS EMAS TANPA SHADOW --- */
-        .text-group {
-            display: inline-flex;
-            flex-direction: column;
-            justify-content: center;
+        /* --- GAYA LOGO GAMBAR (DIPERBESAR 300%) --- */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Aliran ke kiri */
+            flex-grow: 1;
+            /* Ukuran diperbesar 300% (dari 600px ke 1800px) */
+            max-width: 1800px; 
             overflow: visible;
-            position: relative;
-            width: max-content;
         }
 
-        .gold-flat-text {
-            color: transparent; 
-            text-transform: uppercase;
-            margin: 0;
-            position: relative;
-            white-space: nowrap;
-            font-family: "Oswald", sans-serif;
-            font-weight: 900;
-            
-            /* Background gradien emas */
-            background: linear-gradient(
-                135deg, 
-                var(--gold-light) 0%, 
-                var(--gold-mid) 35%, 
-                var(--gold-bright) 50%, 
-                var(--gold-mid) 65%, 
-                var(--gold-dark) 100%
-            );
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shineGold 6s ease-in-out infinite;
-            
-            /* Menghapus text-shadow */
-            text-shadow: none;
-        }
-
-        .title-text {
-            font-size: var(--font-size-main);
-            line-height: 1;
-            letter-spacing: -2px;
-            padding-bottom: 5px;
-        }
-
-        /* Garis Pemisah Sederhana */
-        .gold-line {
-            height: 0.4vmin;
+        .logo-img {
             width: 100%;
-            margin: 15px 0;
-            background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-dark));
-            border-radius: 2px;
-        }
-
-        .subtitle-text {
-            font-size: calc(var(--font-size-main) * 0.38); 
-            letter-spacing: 0.5px;
-            text-align: justify;
-            text-align-last: justify;
-            margin-top: 5px;
-        }
-
-        @keyframes shineGold {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .subtitle-wrapper {
-            overflow: visible;
-            width: 100%;
+            height: auto;
+            filter: none; 
+            opacity: 0;
+            /* Start position lebih dekat (x: 20) untuk kesan geser ke kiri */
+            transform: scale(0.7) translateX(20px);
         }
     </style>
 </head>
@@ -206,17 +147,15 @@
             <div class="hour5"></div>
         </section>
 
-        <!-- Kelompok Teks Flat Gold -->
-        <div class="text-group">
-            <div class="title-wrapper">
-                <h1 class="gold-flat-text title-text">Jagad Imut</h1>
-            </div>
-            
-            <div class="gold-line"></div>
-            
-            <div class="subtitle-wrapper" id="subtitle-anim">
-                <p class="gold-flat-text subtitle-text">Bakul Mbako Hobi Audio.</p>
-            </div>
+        <!-- Container Logo Gambar -->
+        <div class="logo-container">
+            <img 
+                src="https://i.postimg.cc/0NJTLzys/jagadd.png" 
+                alt="Jagad Imut Logo raksasa" 
+                class="logo-img" 
+                id="main-logo"
+                onerror="this.style.display='none'"
+            >
         </div>
     </div>
 
@@ -240,19 +179,14 @@
         updateClock();
 
         window.onload = () => {
-            gsap.from("#subtitle-anim", {
+            // Animasi memunculkan logo raksasa
+            gsap.to("#main-logo", {
                 duration: 1.5,
-                y: 10,
-                opacity: 0,
-                ease: "power3.out",
+                opacity: 1,
+                scale: 1,
+                x: 0,
+                ease: "power4.out",
                 delay: 0.5
-            });
-            gsap.from(".gold-line", {
-                duration: 1.2,
-                scaleX: 0,
-                opacity: 0,
-                ease: "expo.out",
-                delay: 0.3
             });
         };
     </script>
