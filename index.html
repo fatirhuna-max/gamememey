@@ -3,192 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBS Overlay - Jam & Logo Image</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <title>OBS Overlay - Jam & Logo Ringan (GitHub Ready)</title>
+    <!-- Memuat font Oswald secara efisien -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold-mid: #d4af37;
-            --accent-pink: #ff005e;
+            --gold: #d4af37;
+            --pink: #ff005e;
+            --bg-dark: rgba(20, 20, 20, 0.85);
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: transparent !important;
+            background-color: transparent !important; /* Transparansi untuk OBS */
             overflow: hidden;
-            font-family: "Inter", sans-serif;
+            font-family: sans-serif;
         }
 
         .main-wrapper {
             display: flex;
             align-items: center;
             height: 100vh;
-            padding: 0 30px; /* Padding dikurangi untuk memberi ruang lebih */
-            gap: 20px; /* Jarak dikurangi agar logo bergeser ke kiri mendekati jam */
+            padding: 0 30px;
+            gap: 20px; /* Jarak rapat agar logo bergeser ke kiri */
         }
 
-        /* --- GAYA JAM SEIKO --- */
+        /* --- JAM ANALOG OPTIMAL --- */
         .clock-section {
-            width: 32vmin; /* Sedikit dikecilkan agar seimbang dengan logo raksasa */
+            width: 32vmin;
             height: 32vmin;
-            background: rgba(20, 20, 20, 0.85);
+            background: var(--bg-dark);
             border: 1.3vmin solid #111;
-            outline: 0.5vmin solid var(--gold-mid);
+            outline: 0.5vmin solid var(--gold);
             outline-offset: 0.2vmin;
             border-radius: 50%;
             position: relative;
-            z-index: 100;
-            box-shadow: 
-                inset 5px 5px 15px rgba(255, 255, 255, 0.1),
-                inset -5px -5px 15px rgba(0, 0, 0, 0.8),
-                0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
             flex-shrink: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .clock-section:before {
+        .clock-section::before {
             content: '';
             position: absolute;
-            top: 2.5%; left: 2.5%;
-            width: 95%; height: 95%;
+            inset: 2.5%;
             border-radius: 50%;
-            border: 0.8vmin solid rgba(212, 175, 55, 0.2);
+            border: 0.8vmin solid rgba(212, 175, 55, 0.1);
         }
 
         .label {
             position: absolute;
-            top: 25%; left: 50%;
+            top: 25%;
+            left: 50%;
             transform: translateX(-50%);
             font-size: 1.6vmin;
             font-weight: 700;
-            color: var(--gold-mid);
+            color: var(--gold);
             font-family: 'Oswald', sans-serif;
             letter-spacing: 4px;
             opacity: 0.7;
         }
 
-        .hourhand, .secondhand, .minutehand {
+        /* Jarum Jam */
+        .hand {
             position: absolute;
-            top: 50%; left: 50%;
-            z-index: 120;
-            transform-origin: 0% 50%;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            border-radius: 10px;
         }
 
-        .hourhand { width: 9vmin; height: 1.3vmin; background: #fff; margin-top: -0.65vmin; border-radius: 0 10px 10px 0; }
-        .minutehand { width: 13vmin; height: 0.9vmin; background: #ddd; margin-top: -0.45vmin; border-radius: 0 10px 10px 0; }
-        .secondhand { width: 14vmin; height: 0.3vmin; background: var(--accent-pink); margin-top: -0.15vmin; box-shadow: 0 0 12px var(--accent-pink); }
+        .hour-hand { width: 1.3vmin; height: 9vmin; background: #fff; margin: -9vmin 0 0 -0.65vmin; z-index: 3; }
+        .min-hand { width: 0.9vmin; height: 13vmin; background: #ddd; margin: -13vmin 0 0 -0.45vmin; z-index: 2; }
+        .sec-hand { width: 0.3vmin; height: 14vmin; background: var(--pink); margin: -14vmin 0 0 -0.15vmin; z-index: 1; box-shadow: 0 0 8px var(--pink); }
 
-        .hourhand:after, .secondhand:after, .minutehand:after {
-            content: '';
+        .center-pin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2vmin;
+            height: 2vmin;
             background: #fff;
-            width: 2vmin; height: 2vmin;
             border-radius: 50%;
-            position: absolute;
-            top: 50%; left: 0;
             transform: translate(-50%, -50%);
-            z-index: 150;
+            z-index: 10;
         }
 
-        .hour12, .hour1, .hour2, .hour3, .hour4, .hour5 {
-            height: 0.6vmin; width: 100%;
-            background: transparent;
-            border-left: 3vmin solid var(--gold-mid);
-            border-right: 3vmin solid var(--gold-mid);
+        /* Penanda jam di pinggiran */
+        .marker {
             position: absolute;
-            top: 50%; left: 0;
-            margin-top: -0.3vmin;
+            width: 0.6vmin;
+            height: 3vmin;
+            background: var(--gold);
+            left: 50%;
+            top: 0;
+            transform-origin: 50% 16vmin;
             opacity: 0.8;
         }
 
-        .hour12 { transform: rotate(0deg); }
-        .hour1  { transform: rotate(30deg); }
-        .hour2  { transform: rotate(60deg); }
-        .hour3  { transform: rotate(90deg); }
-        .hour4  { transform: rotate(120deg); }
-        .hour5  { transform: rotate(150deg); }
-
-        /* --- GAYA LOGO GAMBAR (DIPERBESAR 300%) --- */
+        /* --- KONTINER LOGO (UKURAN BESAR & GESER KIRI) --- */
         .logo-container {
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Aliran ke kiri */
+            justify-content: flex-start; /* Posisi rapat kiri */
             flex-grow: 1;
-            /* Ukuran diperbesar 300% (dari 600px ke 1800px) */
-            max-width: 1800px; 
-            overflow: visible;
+            max-width: 1800px; /* Ukuran 300% */
         }
 
         .logo-img {
             width: 100%;
             height: auto;
-            filter: none; 
             opacity: 0;
-            /* Start position lebih dekat (x: 20) untuk kesan geser ke kiri */
-            transform: scale(0.7) translateX(20px);
+            transform: scale(0.8) translateX(20px);
+            animation: fadeInLogo 1.2s ease-out forwards 0.5s;
+        }
+
+        @keyframes fadeInLogo {
+            to {
+                opacity: 1;
+                transform: scale(1) translateX(0);
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
-        <!-- Jam Analog Seiko -->
+        <!-- Jam Analog -->
         <section class="clock-section">
             <div class="label">SEIKO</div>
-            <div class="hourhand" id="hour-hand"></div>
-            <div class="minutehand" id="min-hand"></div>
-            <div class="secondhand" id="sec-hand"></div>
-            <div class="hour12"></div>
-            <div class="hour1"></div>
-            <div class="hour2"></div>
-            <div class="hour3"></div>
-            <div class="hour4"></div>
-            <div class="hour5"></div>
+            
+            <!-- Penanda Jam (Markers) -->
+            <div class="marker" style="transform: translateX(-50%) rotate(0deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(30deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(60deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(90deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(120deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(150deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(180deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(210deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(240deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(270deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(300deg)"></div>
+            <div class="marker" style="transform: translateX(-50%) rotate(330deg)"></div>
+
+            <div class="hand hour-hand" id="hour"></div>
+            <div class="hand min-hand" id="min"></div>
+            <div class="hand sec-hand" id="sec"></div>
+            <div class="center-pin"></div>
         </section>
 
-        <!-- Container Logo Gambar -->
+        <!-- Wadah Logo Gambar -->
         <div class="logo-container">
             <img 
                 src="https://i.postimg.cc/0NJTLzys/jagadd.png" 
-                alt="Jagad Imut Logo raksasa" 
-                class="logo-img" 
-                id="main-logo"
-                onerror="this.style.display='none'"
+                alt="Logo Jagad Imut" 
+                class="logo-img"
+                loading="eager"
             >
         </div>
     </div>
 
     <script>
+        const hHand = document.getElementById('hour');
+        const mHand = document.getElementById('min');
+        const sHand = document.getElementById('sec');
+
+        // Fungsi pembaruan jarum jam
         function updateClock() {
             const now = new Date();
-            const seconds = now.getSeconds();
-            const minutes = now.getMinutes();
-            const hours = now.getHours();
+            const s = now.getSeconds();
+            const m = now.getMinutes();
+            const h = now.getHours();
 
-            const secDeg = ((seconds / 60) * 360) - 90;
-            const minDeg = ((minutes / 60) * 360) + ((seconds / 60) * 6) - 90;
-            const hourDeg = ((hours % 12) / 12 * 360) + ((minutes / 60) * 30) - 90;
+            const sDeg = (s * 6);
+            const mDeg = (m * 6) + (s * 0.1);
+            const hDeg = (h * 30) + (m * 0.5);
 
-            document.getElementById('sec-hand').style.transform = `rotate(${secDeg}deg)`;
-            document.getElementById('min-hand').style.transform = `rotate(${minDeg}deg)`;
-            document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
+            sHand.style.transform = `translateX(-50%) rotate(${sDeg}deg)`;
+            mHand.style.transform = `translateX(-50%) rotate(${mDeg}deg)`;
+            hHand.style.transform = `translateX(-50%) rotate(${hDeg}deg)`;
         }
 
+        // Interval 1 detik untuk efisiensi beban CPU
         setInterval(updateClock, 1000);
         updateClock();
-
-        window.onload = () => {
-            // Animasi memunculkan logo raksasa
-            gsap.to("#main-logo", {
-                duration: 1.5,
-                opacity: 1,
-                scale: 1,
-                x: 0,
-                ease: "power4.out",
-                delay: 0.5
-            });
-        };
     </script>
 </body>
 </html>
