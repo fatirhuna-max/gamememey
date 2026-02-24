@@ -3,415 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ekspedisi Pulau Angka Plus</title>
+    <title>OBS Overlay - Jagad Imud Aurora</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Aurora Colors */
+            --bg: #000000;
+            --clr-1: #00c2ff;
+            --clr-2: #33ff8c;
+            --clr-3: #ffc640;
+            --clr-4: #e54cff;
+            --blur: 1.5rem;
+            --fs: clamp(3rem, 6vw, 7rem);
+            --ls: clamp(-1.75px, -0.25vw, -3.5px);
+            
+            /* Seiko Colors */
+            --accent-pink: #ff005e;
+        }
+
         body {
-            font-family: 'Quicksand', sans-serif;
-            background: #f0fdf4;
-            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: transparent !important;
+            overflow: hidden;
+            font-family: "Inter", sans-serif;
+            color: #fff;
         }
-        h1, h2, h3 {
-            font-family: 'Fredoka One', cursive;
+
+        .main-wrapper {
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            padding: 0 60px;
+            gap: 50px;
         }
-        .card-pop {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        /* --- SEIKO CLOCK STYLING --- */
+        .clock-section {
+            width: 32vmin;
+            height: 32vmin;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.2vmin solid #000;
+            border-radius: 50%;
+            position: relative;
+            z-index: 10;
+            box-shadow: 
+                inset 10px 10px 30px rgba(0,0,0,.5), 
+                15px 15px 25px rgba(0,0,0,.4);
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
         }
-        .card-pop:hover {
-            transform: scale(1.05);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+        .clock-section:before {
+            content: '';
+            position: absolute;
+            top: 2.5%; left: 2.5%;
+            width: 95%; height: 95%;
+            border-radius: 50%;
+            border: 0.8vmin solid rgba(255, 255, 255, 0.15);
         }
-        .hidden-view { display: none; }
-        .active-view { display: block; }
-        
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+
+        .label {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8vmin;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 2px;
+            opacity: 0.6;
         }
-        .animate-bounce-slow { animation: bounce-slow 3s ease-in-out infinite; }
+
+        .hourhand, .secondhand, .minutehand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 12;
+            transform-origin: 0% 50%;
+        }
+
+        .hourhand { width: 9vmin; height: 1.1vmin; background: #fff; margin-top: -0.55vmin; border-radius: 0 10px 10px 0; }
+        .minutehand { width: 13vmin; height: 0.7vmin; background: #eee; margin-top: -0.35vmin; border-radius: 0 10px 10px 0; }
+        .secondhand { width: 14.5vmin; height: 0.25vmin; background: var(--accent-pink); margin-top: -0.125vmin; box-shadow: 0 0 5px var(--accent-pink); }
+
+        .hourhand:after, .secondhand:after, .minutehand:after {
+            content: '';
+            background: #fff;
+            width: 1.8vmin; height: 1.8vmin;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%; left: 0;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+        }
+
+        .hour12, .hour1, .hour2, .hour3, .hour4, .hour5 {
+            height: 0.4vmin;
+            width: 100%;
+            background: transparent;
+            border-left: 2.5vmin solid rgba(255,255,255,0.7);
+            border-right: 2.5vmin solid rgba(255,255,255,0.7);
+            position: absolute;
+            top: 50%; left: 0;
+            margin-top: -0.2vmin;
+        }
+
+        .hour12 { transform: rotate(0deg); }
+        .hour1  { transform: rotate(30deg); }
+        .hour2  { transform: rotate(60deg); }
+        .hour3  { transform: rotate(90deg); }
+        .hour4  { transform: rotate(120deg); }
+        .hour5  { transform: rotate(150deg); }
+
+        /* --- AURORA TEXT STYLING --- */
+        .content {
+            text-align: left;
+            position: relative;
+        }
+
+        .title {
+            font-size: var(--fs);
+            font-weight: 800;
+            letter-spacing: var(--ls);
+            position: relative;
+            overflow: hidden;
+            background: var(--bg); /* Penting untuk mix-blend-mode */
+            margin: 0;
+            padding: 10px 20px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .subtitle {
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-left: 20px;
+            font-weight: 400;
+            opacity: 0.9;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .aurora {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            mix-blend-mode: darken;
+            pointer-events: none;
+        }
+
+        .aurora__item {
+            overflow: hidden;
+            position: absolute;
+            width: 30vw;
+            height: 30vw;
+            background-color: var(--clr-1);
+            border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%;
+            filter: blur(var(--blur));
+            mix-blend-mode: overlay;
+        }
+
+        .aurora__item:nth-of-type(1) {
+            top: -50%;
+            animation: aurora-border 6s ease-in-out infinite, aurora-1 12s ease-in-out infinite alternate;
+        }
+
+        .aurora__item:nth-of-type(2) {
+            background-color: var(--clr-3);
+            right: 0; top: 0;
+            animation: aurora-border 6s ease-in-out infinite, aurora-2 12s ease-in-out infinite alternate;
+        }
+
+        .aurora__item:nth-of-type(3) {
+            background-color: var(--clr-2);
+            left: 0; bottom: 0;
+            animation: aurora-border 6s ease-in-out infinite, aurora-3 8s ease-in-out infinite alternate;
+        }
+
+        .aurora__item:nth-of-type(4) {
+            background-color: var(--clr-4);
+            right: 0; bottom: -50%;
+            animation: aurora-border 6s ease-in-out infinite, aurora-4 24s ease-in-out infinite alternate;
+        }
+
+        /* Animations */
+        @keyframes aurora-1 { 0% { top: 0; right: 0; } 50% { top: 100%; right: 75%; } 75% { top: 100%; right: 25%; } 100% { top: 0; right: 0; } }
+        @keyframes aurora-2 { 0% { top: -50%; left: 0%; } 60% { top: 100%; left: 75%; } 85% { top: 100%; left: 25%; } 100% { top: -50%; left: 0%; } }
+        @keyframes aurora-3 { 0% { bottom: 0; left: 0; } 40% { bottom: 100%; left: 75%; } 65% { bottom: 40%; left: 50%; } 100% { bottom: 0; left: 0; } }
+        @keyframes aurora-4 { 0% { bottom: -50%; right: 0; } 50% { bottom: 0%; right: 40%; } 90% { bottom: 50%; right: 25%; } 100% { bottom: -50%; right: 0; } }
+        @keyframes aurora-border {
+            0%, 100% { border-radius: 37% 29% 27% 27% / 28% 25% 41% 37%; }
+            25% { border-radius: 47% 29% 39% 49% / 61% 19% 66% 26%; }
+            50% { border-radius: 57% 23% 47% 72% / 63% 17% 66% 33%; }
+            75% { border-radius: 28% 49% 29% 100% / 93% 20% 64% 25%; }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
 
-    <!-- Navbar / Stats -->
-    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 p-4 shadow-md border-b-4 border-green-500">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <span class="text-3xl animate-bounce-slow">🏝️</span>
-                <div>
-                    <h1 class="text-xl md:text-2xl text-green-700 leading-none">EKSPEDISI PULAU PINTAR</h1>
-                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Multi-Subject Edition</p>
+    <div class="main-wrapper">
+        <!-- Jam Seiko Style -->
+        <section class="clock-section">
+            <div class="label">SEIKO</div>
+            <div class="hourhand" id="hour-hand"></div>
+            <div class="minutehand" id="min-hand"></div>
+            <div class="secondhand" id="sec-hand"></div>
+            <div class="hour12"></div>
+            <div class="hour1"></div>
+            <div class="hour2"></div>
+            <div class="hour3"></div>
+            <div class="hour4"></div>
+            <div class="hour5"></div>
+        </section>
+
+        <!-- Teks Aurora Content -->
+        <div class="content">
+            <h1 class="title">Jagad Imud
+                <div class="aurora">
+                    <div class="aurora__item"></div>
+                    <div class="aurora__item"></div>
+                    <div class="aurora__item"></div>
+                    <div class="aurora__item"></div>
                 </div>
-            </div>
-            <div class="flex gap-2 md:gap-4">
-                <div class="bg-yellow-100 px-3 py-1 rounded-full border-2 border-yellow-400 flex items-center gap-1 shadow-sm">
-                    <span class="text-yellow-600">⭐</span>
-                    <span id="score-val" class="font-bold text-yellow-800">0</span>
-                </div>
-                <div class="bg-blue-100 px-3 py-1 rounded-full border-2 border-blue-400 flex items-center gap-1 shadow-sm">
-                    <span class="text-blue-600">💰</span>
-                    <span id="resource-val" class="font-bold text-blue-800">Rp 0</span>
-                </div>
-            </div>
+            </h1>
+            <p class="subtitle">Bakul Mbako Hobi Audio.</p>
         </div>
-    </header>
-
-    <main class="flex-grow p-4 md:p-8 max-w-6xl mx-auto w-full">
-        
-        <!-- VIEW: MAIN MENU / WORLD MAP -->
-        <div id="view-map" class="active-view">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl text-green-800 mb-2">Pilih Misi Petualanganmu!</h2>
-                <p class="text-gray-600">Selesaikan misi di berbagai lokasi untuk membangun kapal pulang.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Area 1: Matematika (Pasar) -->
-                <button onclick="switchView('view-market')" class="card-pop bg-white p-6 rounded-3xl border-b-8 border-orange-400 text-center">
-                    <div class="bg-orange-100 w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center text-4xl shadow-inner">🛒</div>
-                    <h3 class="text-xl text-orange-600">Pasar Barter</h3>
-                    <p class="text-xs font-bold text-orange-400 mt-1">MATEMATIKA</p>
-                    <p class="text-sm text-gray-500 mt-2">Hitung belanjaan dalam Rupiah</p>
-                </button>
-
-                <!-- Area 2: Agama Islam (Masjid) -->
-                <button onclick="switchView('view-religion')" class="card-pop bg-white p-6 rounded-3xl border-b-8 border-emerald-500 text-center">
-                    <div class="bg-emerald-100 w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center text-4xl shadow-inner">🕌</div>
-                    <h3 class="text-xl text-emerald-600">Masjidil Hikmah</h3>
-                    <p class="text-xs font-bold text-emerald-400 mt-1">AGAMA ISLAM</p>
-                    <p class="text-sm text-gray-500 mt-2">Kuis Iman, Islam, & Akhlak</p>
-                </button>
-
-                <!-- Area 3: Bahasa Inggris (Dermaga) -->
-                <button onclick="switchView('view-english')" class="card-pop bg-white p-6 rounded-3xl border-b-8 border-blue-500 text-center">
-                    <div class="bg-blue-100 w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center text-4xl shadow-inner">⚓</div>
-                    <h3 class="text-xl text-blue-600">Dermaga Bahasa</h3>
-                    <p class="text-xs font-bold text-blue-400 mt-1">ENGLISH</p>
-                    <p class="text-sm text-gray-500 mt-2">Vocabulary & Fun Words</p>
-                </button>
-
-                <!-- Area 4: Matematika (Arsitek) -->
-                <button onclick="switchView('view-architect')" class="card-pop bg-white p-6 rounded-3xl border-b-8 border-purple-500 text-center">
-                    <div class="bg-purple-100 w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center text-4xl shadow-inner">📐</div>
-                    <h3 class="text-xl text-purple-600">Studio Arsitek</h3>
-                    <p class="text-xs font-bold text-purple-400 mt-1">MATEMATIKA</p>
-                    <p class="text-sm text-gray-500 mt-2">Luas, Keliling & Bangun</p>
-                </button>
-            </div>
-
-            <!-- Ship Progress -->
-            <div class="mt-16 bg-white p-8 rounded-3xl shadow-xl border-2 border-green-100">
-                <div class="flex flex-col md:flex-row items-center gap-6">
-                    <div class="text-6xl animate-bounce">🚢</div>
-                    <div class="flex-grow w-full">
-                        <div class="flex justify-between items-end mb-3">
-                            <h3 class="text-green-800 text-lg">Status Pembangunan Kapal Penyelamat</h3>
-                            <span id="ship-percent" class="font-bold text-2xl text-green-600">0%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-8 overflow-hidden border-4 border-white shadow-inner">
-                            <div id="ship-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-full transition-all duration-1000" style="width: 0%"></div>
-                        </div>
-                        <p class="mt-4 text-gray-500 text-sm">Target: Kumpulkan **Rp 1.000.000** dari misi-misi di atas!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TEMPLATE UNTUK SEMUA MISI -->
-        <div id="view-mission" class="hidden-view">
-            <div class="flex items-center gap-4 mb-6">
-                <button onclick="switchView('view-map')" class="bg-white p-3 rounded-2xl border-b-4 border-gray-300 hover:bg-gray-50 text-2xl transition-all active:translate-y-1">🔙</button>
-                <div>
-                    <h2 id="mission-title" class="text-2xl md:text-3xl">Judul Misi</h2>
-                    <p id="mission-subtitle" class="text-gray-500 font-bold uppercase text-xs tracking-widest"></p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Question Card -->
-                <div class="lg:col-span-2 bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-current" id="mission-card-style">
-                    <div id="visual-area" class="mb-8 flex justify-center">
-                        <!-- Space for dynamic visuals like images/math symbols -->
-                    </div>
-                    <p id="mission-question" class="text-xl md:text-2xl text-gray-800 mb-8 leading-relaxed font-semibold"></p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="mission-options">
-                        <!-- Options injected here -->
-                    </div>
-                </div>
-
-                <!-- Info Side Card -->
-                <div class="bg-green-50 p-6 rounded-3xl border-2 border-green-100 flex flex-col items-center justify-center text-center">
-                    <div class="text-5xl mb-4" id="npc-icon">👨‍🏫</div>
-                    <h4 class="font-bold text-green-800 mb-2" id="npc-name">Guru Pendamping</h4>
-                    <p class="text-sm text-green-700 italic" id="npc-hint">"Baca soal dengan teliti ya, Nak! Kamu pasti bisa!"</p>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Modal Feedback -->
-    <div id="feedback-modal" class="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center hidden p-4 backdrop-blur-sm">
-        <div class="bg-white p-8 rounded-[40px] max-w-sm w-full text-center shadow-2xl transform transition-all">
-            <div id="feedback-icon" class="text-7xl mb-4 scale-110"></div>
-            <h3 id="feedback-title" class="text-3xl mb-2"></h3>
-            <p id="feedback-msg" class="text-gray-600 mb-8 text-lg"></p>
-            <button onclick="closeFeedback()" id="feedback-btn" class="w-full py-4 rounded-2xl font-bold text-xl text-white shadow-lg transition-transform active:scale-95"></button>
-        </div>
-    </div>
-
-    <!-- Win Screen -->
-    <div id="win-screen" class="fixed inset-0 bg-gradient-to-br from-green-500 to-blue-600 z-[200] flex flex-col items-center justify-center text-white p-8 hidden">
-        <div class="text-9xl mb-8 animate-bounce">🚢</div>
-        <h2 class="text-5xl md:text-7xl mb-4 text-center">MISI SELESAI!</h2>
-        <p class="text-2xl mb-12 text-center max-w-xl font-light">Selamat! Kapal penyelamat telah siap berlayar berkat ilmu Matematika, Agama, dan Bahasa Inggrismu!</p>
-        <button onclick="location.reload()" class="bg-yellow-400 text-yellow-900 px-12 py-5 rounded-full text-3xl font-bold hover:bg-yellow-300 transition-all shadow-2xl border-b-8 border-yellow-600 active:translate-y-2 active:border-b-0">MAIN LAGI</button>
     </div>
 
     <script>
-        // Game State
-        let gameState = {
-            stars: 0,
-            resources: 0,
-            targetResources: 1000000, // Rp 1.000.000
-            currentSubject: ''
-        };
+        function updateClock() {
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
 
-        // Utility: Format Rupiah
-        function formatRupiah(number) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
-            }).format(number);
+            const secDeg = ((seconds / 60) * 360) - 90;
+            const minDeg = ((minutes / 60) * 360) + ((seconds / 60) * 6) - 90;
+            const hourDeg = ((hours % 12) / 12 * 360) + ((minutes / 60) * 30) - 90;
+
+            document.getElementById('sec-hand').style.transform = `rotate(${secDeg}deg)`;
+            document.getElementById('min-hand').style.transform = `rotate(${minDeg}deg)`;
+            document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
         }
 
-        // Navigation
-        function switchView(viewId) {
-            const map = document.getElementById('view-map');
-            const mission = document.getElementById('view-mission');
-            
-            if(viewId === 'view-map') {
-                map.classList.remove('hidden-view');
-                mission.classList.add('hidden-view');
-            } else {
-                map.classList.add('hidden-view');
-                mission.classList.remove('hidden-view');
-                setupMission(viewId);
-            }
-        }
-
-        function updateUI() {
-            document.getElementById('score-val').innerText = gameState.stars;
-            document.getElementById('resource-val').innerText = formatRupiah(gameState.resources);
-            
-            let percent = Math.min(100, Math.floor((gameState.resources / gameState.targetResources) * 100));
-            document.getElementById('ship-bar').style.width = percent + '%';
-            document.getElementById('ship-percent').innerText = percent + '%';
-
-            if(gameState.resources >= gameState.targetResources) {
-                setTimeout(() => {
-                    document.getElementById('win-screen').classList.remove('hidden');
-                }, 800);
-            }
-        }
-
-        function setupMission(type) {
-            const style = document.getElementById('mission-card-style');
-            const title = document.getElementById('mission-title');
-            const sub = document.getElementById('mission-subtitle');
-            const npcIcon = document.getElementById('npc-icon');
-            const npcName = document.getElementById('npc-name');
-            const npcHint = document.getElementById('npc-hint');
-            
-            gameState.currentSubject = type;
-
-            switch(type) {
-                case 'view-market':
-                    title.innerText = "Pasar Barter Suku Numeri";
-                    sub.innerText = "Matematika - Operasi Rupiah";
-                    style.style.borderTopColor = "#f97316";
-                    npcIcon.innerText = "👲";
-                    npcName.innerText = "Pak Pedagang";
-                    npcHint.innerText = "Jangan sampai salah kembalian ya, Den!";
-                    generateMathMission();
-                    break;
-                case 'view-religion':
-                    title.innerText = "Masjidil Hikmah";
-                    sub.innerText = "Pendidikan Agama Islam";
-                    style.style.borderTopColor = "#10b981";
-                    npcIcon.innerText = "🧕";
-                    npcName.innerText = "Ustazah Maryam";
-                    npcHint.innerText = "Ilmu agama adalah cahaya dalam perjalananmu.";
-                    generateReligionMission();
-                    break;
-                case 'view-english':
-                    title.innerText = "Dermaga Bahasa";
-                    sub.innerText = "English - Vocabulary";
-                    style.style.borderTopColor = "#3b82f6";
-                    npcIcon.innerText = "👨‍✈️";
-                    npcName.innerText = "Captain Jack";
-                    npcHint.innerText = "We need to talk with international sailors!";
-                    generateEnglishMission();
-                    break;
-                case 'view-architect':
-                    title.innerText = "Studio Arsitek";
-                    sub.innerText = "Matematika - Geometri";
-                    style.style.borderTopColor = "#a855f7";
-                    npcIcon.innerText = "👷";
-                    npcName.innerText = "Pak Arsitek";
-                    npcHint.innerText = "Presisi adalah kunci membangun struktur kokoh.";
-                    generateGeometryMission();
-                    break;
-            }
-        }
-
-        // --- CONTENT GENERATORS ---
-
-        function generateMathMission() {
-            const items = [
-                { n: "Apel", p: 5000 }, { n: "Roti", p: 12000 }, 
-                { n: "Susu", p: 15000 }, { n: "Jeruk", p: 8000 }
-            ];
-            const itm = items[Math.floor(Math.random()*items.length)];
-            const qty = Math.floor(Math.random()*5)+2;
-            const answer = itm.p * qty;
-
-            document.getElementById('visual-area').innerHTML = `<div class="text-7xl">🛒</div>`;
-            document.getElementById('mission-question').innerText = `Berapakah total harga yang harus dibayar jika kamu membeli ${qty} buah ${itm.n} dengan harga satuan ${formatRupiah(itm.p)}?`;
-            
-            renderOptions(answer, (val) => {
-                if(val === answer) showFeedback(true, `Totalnya tepat ${formatRupiah(answer)}`, 150000);
-                else showFeedback(false, "Coba kalikan harga satuan dengan jumlah barangnya.");
-            }, true);
-        }
-
-        function generateReligionMission() {
-            const pool = [
-                { q: "Siapakah Nabi terakhir (Khatamun Nabiyyin)?", a: "Nabi Muhammad SAW", hint: "Beliau adalah pembawa risalah Islam." },
-                { q: "Ada berapakah jumlah Rukun Iman?", a: "6", hint: "Iman kepada Allah, Malaikat, Kitab, Rasul, Hari Akhir, Qada & Qadar." },
-                { q: "Malaikat yang bertugas menyampaikan wahyu adalah...", a: "Malaikat Jibril", hint: "Beliau mendatangi Nabi di Gua Hira." },
-                { q: "Kitab suci yang diturunkan kepada Nabi Daud AS adalah...", a: "Zabur", hint: "Kitab ini berisi puji-pujian kepada Allah." },
-                { q: "Shalat fardhu yang berjumlah 3 rakaat adalah...", a: "Maghrib", hint: "Dikerjakan saat matahari terbenam." }
-            ];
-            const q = pool[Math.floor(Math.random()*pool.length)];
-            
-            document.getElementById('visual-area').innerHTML = `<div class="text-7xl">📖</div>`;
-            document.getElementById('mission-question').innerText = q.q;
-            
-            renderOptions(q.a, (val) => {
-                if(val === q.a) showFeedback(true, "Masya Allah, jawabanmu benar!", 120000);
-                else showFeedback(false, q.hint);
-            }, false, pool.map(x => x.a));
-        }
-
-        function generateEnglishMission() {
-            const pool = [
-                { q: "What is the English word for 'Gajah'?", a: "Elephant", v: "🐘" },
-                { q: "Which color is 'Hijau' in English?", a: "Green", v: "🟩" },
-                { q: "I have 5 apples. My sister gives me 2 more. How many apples do I have?", a: "Seven", v: "🍎" },
-                { q: "What is the English word for 'Saudara Perempuan'?", a: "Sister", v: "👩" },
-                { q: "Translate to English: 'Saya suka matematika'", a: "I like math", v: "❤️" }
-            ];
-            const q = pool[Math.floor(Math.random()*pool.length)];
-
-            document.getElementById('visual-area').innerHTML = `<div class="text-8xl">${q.v}</div>`;
-            document.getElementById('mission-question').innerText = q.q;
-
-            renderOptions(q.a, (val) => {
-                if(val === q.a) showFeedback(true, "Great job! You're good at English.", 100000);
-                else showFeedback(false, "Check your vocabulary again!");
-            }, false, pool.map(x => x.a));
-        }
-
-        function generateGeometryMission() {
-            const p = Math.floor(Math.random()*10)+5;
-            const l = Math.floor(Math.random()*5)+3;
-            const type = Math.random() > 0.5 ? 'Luas' : 'Keliling';
-            const answer = type === 'Luas' ? p * l : 2 * (p + l);
-
-            document.getElementById('visual-area').innerHTML = `
-                <div class="bg-purple-100 border-4 border-purple-500 rounded-xl relative" style="width:${p*15}px; height:${l*15}px">
-                    <span class="absolute -top-7 w-full text-center font-bold">${p} m</span>
-                    <span class="absolute -left-10 h-full flex items-center font-bold">${l} m</span>
-                </div>
-            `;
-            document.getElementById('mission-question').innerText = `Sebuah tenda berbentuk persegi panjang memiliki panjang ${p}m dan lebar ${l}m. Berapakah ${type}-nya?`;
-
-            renderOptions(answer, (val) => {
-                if(val === answer) showFeedback(true, `Tepat sekali! ${type}-nya adalah ${answer}`, 200000);
-                else showFeedback(false, type === 'Luas' ? "Luas = Panjang x Lebar" : "Keliling = 2 x (Panjang + Lebar)");
-            }, true);
-        }
-
-        // Option Rendering
-        function renderOptions(correct, callback, isNumber = false, allAnswers = []) {
-            const container = document.getElementById('mission-options');
-            container.innerHTML = "";
-            
-            let options = [correct];
-            
-            while(options.length < 4) {
-                let fake;
-                if(isNumber) {
-                    fake = correct + (Math.floor(Math.random()*10)-5);
-                    if(fake < 0 || options.includes(fake)) continue;
-                } else {
-                    fake = allAnswers[Math.floor(Math.random()*allAnswers.length)];
-                    if(options.includes(fake)) continue;
-                }
-                options.push(fake);
-            }
-
-            options.sort(() => Math.random() - 0.5);
-
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "p-5 bg-white border-2 border-gray-100 rounded-2xl hover:border-blue-400 hover:bg-blue-50 text-xl font-bold transition-all shadow-sm active:scale-95";
-                btn.innerText = (isNumber && gameState.currentSubject === 'view-market') ? formatRupiah(opt) : opt;
-                btn.onclick = () => callback(opt);
-                container.appendChild(btn);
-            });
-        }
-
-        // Logic Modal
-        function showFeedback(correct, msg, reward = 0) {
-            const modal = document.getElementById('feedback-modal');
-            const icon = document.getElementById('feedback-icon');
-            const title = document.getElementById('feedback-title');
-            const message = document.getElementById('feedback-msg');
-            const btn = document.getElementById('feedback-btn');
-
-            if(correct) {
-                icon.innerText = "🎉";
-                title.innerText = "LUAR BIASA!";
-                title.className = "text-3xl text-green-600 mb-2 font-bold";
-                message.innerText = `${msg}\nKamu dapat tambahan ${formatRupiah(reward)}!`;
-                btn.innerText = "Lanjut Berpetualang";
-                btn.className = "w-full py-4 rounded-2xl font-bold text-xl text-white bg-green-500 hover:bg-green-600 shadow-lg";
-                
-                gameState.stars += 1;
-                gameState.resources += reward;
-                updateUI();
-            } else {
-                icon.innerText = "💡";
-                title.innerText = "AYO COBA LAGI!";
-                title.className = "text-3xl text-blue-600 mb-2 font-bold";
-                message.innerText = msg;
-                btn.innerText = "Siap, Aku Mengerti";
-                btn.className = "w-full py-4 rounded-2xl font-bold text-xl text-white bg-blue-500 hover:bg-blue-600 shadow-lg";
-            }
-            modal.classList.remove('hidden');
-        }
-
-        function closeFeedback() {
-            document.getElementById('feedback-modal').classList.add('hidden');
-            setupMission(gameState.currentSubject);
-        }
-
-        // Init
-        window.onload = updateUI;
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
